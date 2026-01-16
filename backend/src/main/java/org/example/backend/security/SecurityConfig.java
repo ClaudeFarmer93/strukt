@@ -23,12 +23,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( a -> a
-                        .requestMatchers("/api/my-habits").hasAuthority("ADMIN")
+                        //Public
+                        .requestMatchers("/api/habits/**").permitAll()
+
+                        //Authenticated
                         .requestMatchers("/api/auth/me").authenticated()
-                        .requestMatchers("/api/habits").authenticated()
-                        .requestMatchers("/api/home").permitAll()
-                        .requestMatchers("/api/example").permitAll()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/api/user/**").authenticated()
+                        .requestMatchers("/api/my-habits").authenticated()
+
+                        //Everything else for now
+                        .anyRequest().authenticated())
                 .oauth2Login(o -> o
                         .defaultSuccessUrl("http://localhost:5173/"))
                 .logout(logout -> logout
