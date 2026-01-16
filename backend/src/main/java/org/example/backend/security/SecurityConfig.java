@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/my-habits").authenticated()
+                        .requestMatchers("/api/my-habits/**").authenticated()
 
                         //Everything else for now
                         .anyRequest().authenticated())
