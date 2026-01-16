@@ -54,7 +54,12 @@ public class AuthControllerTest {
                             "githubId": "12345",
                             "username": "testUser",
                             "email": "test@example.com",
-                            "avatarUrl": "https://example.com/avatar.png"
+                            "avatarUrl": "https://example.com/avatar.png",
+                            "totalXp": 0,
+                            "level": 0,
+                            "currentStreak": 0,
+                            "longestStreak": 0,
+                            "lastActiveDate": null
                         }
                         """));
     }
