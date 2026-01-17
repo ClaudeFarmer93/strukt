@@ -33,7 +33,7 @@ public class AppUser {
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.totalXp = 0;
-        this.level = 0;
+        this.level = 1;
         this.currentStreak = 0;
         this.longestStreak = 0;
         this.lastActiveDate = null;
