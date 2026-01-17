@@ -1,6 +1,6 @@
 import {Route, Routes } from "react-router-dom"
-import HomePage from "./pages/HomePage.tsx";
-import MePage from "./pages/MePage.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
+import DashboardPage from "./pages/DashboardPage.tsx";
 import {AuthProvider} from "./auth/auth.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Layout from "./components/Layout.tsx";
@@ -12,9 +12,12 @@ function App() {
         <AuthProvider>
         <Routes>
             <Route element={<Layout />}>
-            <Route path={"/"} element={<HomePage/>}/>
+            <Route path={"/"} element={<LandingPage/>}/>
 
-                <Route path={"/me"} element={<ProtectedRoute><MePage/></ProtectedRoute>}/>
+                <Route path={"/dashboard"}
+                       element={
+                    <ProtectedRoute><DashboardPage/></ProtectedRoute>
+                }/>
             </Route>
 
         </Routes>

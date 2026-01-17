@@ -1,5 +1,5 @@
 import {Typography} from "@mui/material";
-export default function HomePage () {
+export default function LandingPage () {
 
     return (
         <>
