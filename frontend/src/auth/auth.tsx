@@ -1,15 +1,7 @@
 import {createContext, type ReactNode, useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
-interface User {
-    id: string;
-    githubId: string;
-    username: string;
-    email: string;
-    avatarUrl: string;
-
-}
+import type {User} from "../types/types";
 
 interface AuthContextType  {
     user : User |undefined | null;
@@ -58,7 +50,7 @@ export function AuthProvider({children } : {children: ReactNode}) {
 
     useEffect(() => {
         if(user) {
-            navigate("/me")
+            navigate("/dashboard")
         }
     }, [user, navigate]);
 
