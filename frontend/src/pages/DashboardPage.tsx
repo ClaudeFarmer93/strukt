@@ -66,6 +66,9 @@ if(!user) return null;
     return (
 
         <Container maxWidth ="md">
+            <Typography variant="h4" sx={{mb:3}}>
+                Welcome back, {user.username}
+            </Typography>
             <Typography variant="h5" sx={{mb:2}}>
                 Today's suggestions
             </Typography>
@@ -90,11 +93,7 @@ if(!user) return null;
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-            <Typography variant="h4" sx={{mb:3}}>
-                Welcome back, {user.username}
-            </Typography>
             <UserStats user={user} />
-
         </Container>
 
     )
