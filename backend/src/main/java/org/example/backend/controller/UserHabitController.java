@@ -43,4 +43,16 @@ public class UserHabitController {
         userHabitService.deleteUserHabit(user.getId(), habitId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{habitId}/complete")
+    public ResponseEntity<UserHabit> completeUserHabit(
+            @AuthenticationPrincipal OAuth2User oAuth2User,
+            @PathVariable String habitId) {
+
+        AppUser user = appUserService.getOrCreateUser(oAuth2User);
+        UserHabit completedHabit = userHabitService.completeUserHabit(user.getId(), habitId);
+        appUserService.addXp(user.getId(), completedHabit.getDifficulty().getBaseXp());
+
+        return ResponseEntity.ok(completedHabit);
+    }
 }

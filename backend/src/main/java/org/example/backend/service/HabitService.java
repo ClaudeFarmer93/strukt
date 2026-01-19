@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.exception.HabitNotFoundException;
 import org.example.backend.model.Habit;
 import org.example.backend.model.HabitDifficulty;
 import org.example.backend.repository.HabitRepository;
@@ -33,11 +34,27 @@ public class HabitService {
 
     public Habit getRandomDailyHabit() {
         return habitRepository.findRandomDailyHabit()
-                .orElseThrow(() -> new RuntimeException("No daily habit found"));
+                .orElseThrow(() -> new HabitNotFoundException("No daily habit found"));
     }
 
     public Habit getRandomWeeklyHabit() {
         return habitRepository.findRandomWeeklyHabit()
-                .orElseThrow(() -> new RuntimeException("No weekly habit found"));
+                .orElseThrow(() -> new HabitNotFoundException("No weekly habit found"));
+    }
+
+    public Habit getRandomDailyHabitExcluding(List<String> excludeIds) {
+        if(excludeIds == null || excludeIds.isEmpty()) {
+            return getRandomDailyHabit();
+        }
+        return habitRepository.findRandomDailyHabitExcluding(excludeIds)
+                .orElseThrow(() -> new HabitNotFoundException("No daily habit found"));
+    }
+
+    public Habit getRandomWeeklyHabitExcluding(List<String> excludeIds) {
+        if(excludeIds == null || excludeIds.isEmpty()) {
+            return getRandomWeeklyHabit();
+        }
+        return habitRepository.findRandomWeeklyHabitExcluding(excludeIds)
+                .orElseThrow(() -> new HabitNotFoundException("No weekly habit found"));
     }
 }

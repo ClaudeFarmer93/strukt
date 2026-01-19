@@ -150,4 +150,101 @@ class HabitServiceTest {
         assertTrue(exception.getMessage().contains("weekly"));
         verify(habitRepository).findRandomWeeklyHabit();
     }
+
+    @Test
+    void getRandomDailyHabitExcluding_returnsHabitNotInExcludeList() {
+        Habit habit = new Habit("Read for 20 minutes", "Expand your mind", "Personal Growth", HabitDifficulty.MEDIUM, HabitFrequency.DAILY);
+        habit.setId("daily456");
+
+        List<String> excludeIds = List.of("daily123", "daily789");
+        when(habitRepository.findRandomDailyHabitExcluding(excludeIds)).thenReturn(Optional.of(habit));
+
+        Habit result = habitService.getRandomDailyHabitExcluding(excludeIds);
+
+        assertNotNull(result);
+        assertEquals("daily456", result.getId());
+        verify(habitRepository).findRandomDailyHabitExcluding(excludeIds);
+    }
+
+    @Test
+    void getRandomDailyHabitExcluding_whenEmptyExcludeList_callsRegularMethod() {
+        Habit habit = new Habit("Make your bed", "Start the day right", "Morning Routine", HabitDifficulty.EASY, HabitFrequency.DAILY);
+        habit.setId("daily123");
+
+        when(habitRepository.findRandomDailyHabit()).thenReturn(Optional.of(habit));
+
+        Habit result = habitService.getRandomDailyHabitExcluding(List.of());
+
+        assertNotNull(result);
+        assertEquals("daily123", result.getId());
+        verify(habitRepository).findRandomDailyHabit();
+        verify(habitRepository, never()).findRandomDailyHabitExcluding(any());
+    }
+
+    @Test
+    void getRandomDailyHabitExcluding_whenNullExcludeList_callsRegularMethod() {
+        Habit habit = new Habit("Make your bed", "Start the day right", "Morning Routine", HabitDifficulty.EASY, HabitFrequency.DAILY);
+        habit.setId("daily123");
+
+        when(habitRepository.findRandomDailyHabit()).thenReturn(Optional.of(habit));
+
+        Habit result = habitService.getRandomDailyHabitExcluding(null);
+
+        assertNotNull(result);
+        verify(habitRepository).findRandomDailyHabit();
+    }
+
+    @Test
+    void getRandomWeeklyHabitExcluding_returnsHabitNotInExcludeList() {
+        Habit habit = new Habit("Meal prep", "Prepare for the week", "Health", HabitDifficulty.HARD, HabitFrequency.WEEKLY);
+        habit.setId("weekly456");
+
+        List<String> excludeIds = List.of("weekly123", "weekly789");
+        when(habitRepository.findRandomWeeklyHabitExcluding(excludeIds)).thenReturn(Optional.of(habit));
+
+        Habit result = habitService.getRandomWeeklyHabitExcluding(excludeIds);
+
+        assertNotNull(result);
+        assertEquals("weekly456", result.getId());
+        verify(habitRepository).findRandomWeeklyHabitExcluding(excludeIds);
+    }
+
+    @Test
+    void getRandomWeeklyHabitExcluding_whenEmptyExcludeList_callsRegularMethod() {
+        Habit habit = new Habit("Meal prep", "Prepare for the week", "Health", HabitDifficulty.HARD, HabitFrequency.WEEKLY);
+        habit.setId("weekly123");
+
+        when(habitRepository.findRandomWeeklyHabit()).thenReturn(Optional.of(habit));
+
+        Habit result = habitService.getRandomWeeklyHabitExcluding(List.of());
+
+        assertNotNull(result);
+        assertEquals("weekly123", result.getId());
+        verify(habitRepository).findRandomWeeklyHabit();
+        verify(habitRepository, never()).findRandomWeeklyHabitExcluding(any());
+    }
+
+    @Test
+    void getRandomDailyHabitExcluding_whenNoneFound_throwsException() {
+        List<String> excludeIds = List.of("daily123");
+        when(habitRepository.findRandomDailyHabitExcluding(excludeIds)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            habitService.getRandomDailyHabitExcluding(excludeIds);
+        });
+
+        assertTrue(exception.getMessage().contains("daily"));
+    }
+
+    @Test
+    void getRandomWeeklyHabitExcluding_whenNoneFound_throwsException() {
+        List<String> excludeIds = List.of("weekly123");
+        when(habitRepository.findRandomWeeklyHabitExcluding(excludeIds)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            habitService.getRandomWeeklyHabitExcluding(excludeIds);
+        });
+
+        assertTrue(exception.getMessage().contains("weekly"));
+    }
 }

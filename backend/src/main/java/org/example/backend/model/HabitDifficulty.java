@@ -1,8 +1,8 @@
 package org.example.backend.model;
 
 public enum HabitDifficulty {
-    EASY(50),
-    MEDIUM(75),
+    EASY(25),
+    MEDIUM(50),
     HARD(100);
 
     private final int baseXp;
