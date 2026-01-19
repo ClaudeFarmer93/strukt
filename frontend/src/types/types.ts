@@ -29,9 +29,9 @@ export interface UserHabit {
     difficulty: "EASY" | "MEDIUM" | "HARD";
     frequency: "DAILY" | "WEEKLY";
     active: boolean;
-    currentStreak?: number;
-    longestStreak?: number;
-    lastCompletedDate?: string | null;
-    totalCompletions?: number;
-    totalXpEarned?: number;
+    currentStreak: number;
+    longestStreak: number;
+    lastCompletedDate: string | null;
+    totalCompletions: number;
+    totalXpEarned: number;
 }
