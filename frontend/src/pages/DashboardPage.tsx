@@ -1,18 +1,27 @@
-import {Typography, Container, Box, Snackbar, Alert} from "@mui/material";
+import {Typography, Container, Box, Snackbar, Alert, Grid} from "@mui/material";
 import {useAuth} from "../auth/auth.tsx";
 import {useEffect, useState} from "react";
-import type {Habit} from "../types/types.ts";
+import type {Habit, UserHabit} from "../types/types.ts";
 import UserStats from "../components/UserStats.tsx";
 import HabitCard from "../components/HabitCard.tsx";
-import {acceptUserHabit, getRandomDailyHabit, getRandomWeeklyHabit} from "../api/habitApi.ts";
+import {
+    acceptUserHabit,
+    completeUserHabit,
+    getMyHabits,
+    getRandomDailyHabit,
+    getRandomWeeklyHabit
+} from "../api/habitApi.ts";
+import TodaysChallenges from "../components/TodaysChallenges.tsx";
 
 export default function DashboardPage() {
 const {user} = useAuth();
 
 const [dailyHabit, setDailyHabit] = useState<Habit |null>(null);
 const [weeklyHabit, setWeeklyHabit] = useState<Habit| null>(null);
+const [myHabits, setMyHabits] = useState<UserHabit[]>([]) ;
 const [loadingDailyHabit, setLoadingDailyHabit] = useState<boolean>(true);
 const [loadingWeeklyHabit, setLoadingWeeklyHabit] = useState<boolean>(true);
+const [loadingMyHabits, setLoadingMyHabits] = useState<boolean>(true);
 const [snackbar, setSnackbar] = useState<{open: boolean; message: string;
     severity:"success" |"error"}> ({open: false, message: "", severity: "success"});
 
@@ -40,13 +49,25 @@ const fetchWeeklyHabit = async () => {
     }
 };
 
+const fetchMyHabits = async () => {
+    setLoadingMyHabits(true);
+    try{
+        const response = await getMyHabits();
+        setMyHabits(response.data);
+    } catch (err) {
+        console.error("Failed to load my habits", err);
+    } finally {
+        setLoadingMyHabits(false);
+    }
+};
+
 const handleAccept = async (habit: Habit |null) => {
     if(!habit) return;
     try {
         await acceptUserHabit(habit.id);
         setSnackbar({open: true, message: `"${habit.name}" added to your list!`, severity: "success"});
+        fetchMyHabits();
         if(habit.frequency === "DAILY"){
-
             fetchDailyHabit();
         }else {
             fetchWeeklyHabit();
@@ -55,24 +76,40 @@ const handleAccept = async (habit: Habit |null) => {
         setSnackbar({open: true, message:"Failed to add habit. Maybe you're already tracking it?", severity: "error"});
         console.error(err)
     }
-}
+};
+
+const handleComplete = async (habitId: string) => {
+    try {
+        await completeUserHabit(habitId);
+        setSnackbar({open: true, message: "Habit completed! XP earned", severity: "success"});
+        await fetchMyHabits();
+    } catch (err) {
+        setSnackbar({open: true, message: "Failed to complete this habit", severity: "error"});
+        console.error("Failed to complete", err);
+    }
+};
 
     useEffect(() => {
         fetchDailyHabit();
         fetchWeeklyHabit();
+        fetchMyHabits();
     }, []);
 if(!user) return null;
 
     return (
 
-        <Container maxWidth ="md">
+        <Container maxWidth ="lg">
             <Typography variant="h4" sx={{mb:3}}>
                 Welcome back, {user.username}
             </Typography>
+            <Grid container spacing={3}>
+                <Grid size={{xs: 12, md:8}}>
+                    <UserStats user={user} />
+
             <Typography variant="h5" sx={{mb:2}}>
                 Today's suggestions
             </Typography>
-            <Box sx={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+            <Box sx={{display: "flex", flexWrap: "wrap", gap: 2}}>
                 <HabitCard habit={dailyHabit}
                            title={"Daily Habit"}
                            onAccept={() => handleAccept(dailyHabit)}
@@ -84,6 +121,14 @@ if(!user) return null;
                            onReroll={fetchWeeklyHabit}
                            loading={loadingWeeklyHabit}/>
             </Box>
+            </Grid>
+            <Grid size={{ xs: 12, md: 4}}>
+                <TodaysChallenges habits={myHabits}
+                                  onComplete={handleComplete}
+                                  loading={loadingMyHabits}/>
+
+            </Grid>
+            </Grid>
             <Snackbar
             open={snackbar.open}
             autoHideDuration={4000}
@@ -93,8 +138,6 @@ if(!user) return null;
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-            <UserStats user={user} />
         </Container>
-
-    )
+    );
 }
