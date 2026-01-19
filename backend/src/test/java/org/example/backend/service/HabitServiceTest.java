@@ -92,7 +92,7 @@ class HabitServiceTest {
         List<Habit> result = habitService.getHabitsByDifficulty(HabitDifficulty.EASY);
 
         assertEquals(1, result.size());
-        assertEquals(HabitDifficulty.EASY, result.get(0).getDifficulty());
+        assertEquals(HabitDifficulty.EASY, result.getFirst().getDifficulty());
         verify(habitRepository).findByDifficulty(HabitDifficulty.EASY);
     }
 
@@ -116,7 +116,7 @@ class HabitServiceTest {
         when(habitRepository.findRandomDailyHabit()).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> habitService.getRandomDailyHabit());
+                habitService::getRandomDailyHabit);
 
         assertTrue(exception.getMessage().contains("daily"));
         verify(habitRepository).findRandomDailyHabit();
@@ -142,7 +142,7 @@ class HabitServiceTest {
         when(habitRepository.findRandomWeeklyHabit()).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> habitService.getRandomWeeklyHabit());
+                habitService::getRandomWeeklyHabit);
 
         assertTrue(exception.getMessage().contains("weekly"));
         verify(habitRepository).findRandomWeeklyHabit();
