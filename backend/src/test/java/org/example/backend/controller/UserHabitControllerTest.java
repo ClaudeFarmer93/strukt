@@ -147,4 +147,42 @@ public class UserHabitControllerTest {
         mockMvc.perform(delete("/api/my-habits/habit456"))
                 .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    void completeUserHabit_whenAuthenticated_returnsCompletedHabit() throws Exception {
+        AppUser mockUser = createMockUser();
+
+        UserHabit completedHabit = new UserHabit();
+        completedHabit.setId("uh123");
+        completedHabit.setUserId("user123");
+        completedHabit.setHabitId("habit456");
+        completedHabit.setHabitName("Read for 20 minutes");
+        completedHabit.setDifficulty(HabitDifficulty.MEDIUM);
+        completedHabit.setFrequency(HabitFrequency.DAILY);
+        completedHabit.setCurrentStreak(5);
+        completedHabit.setLongestStreak(5);
+        completedHabit.setTotalCompletions(10);
+        completedHabit.setActive(true);
+
+        when(appUserService.getOrCreateUser(any(OAuth2User.class))).thenReturn(mockUser);
+        when(userHabitService.completeUserHabit("user123", "habit456")).thenReturn(completedHabit);
+        when(appUserService.addXp("user123", HabitDifficulty.MEDIUM.getBaseXp())).thenReturn(mockUser);
+
+        mockMvc.perform(post("/api/my-habits/habit456/complete")
+                        .with(oidcLogin()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("uh123"))
+                .andExpect(jsonPath("$.habitName").value("Read for 20 minutes"))
+                .andExpect(jsonPath("$.currentStreak").value(5))
+                .andExpect(jsonPath("$.totalCompletions").value(10));
+
+        verify(userHabitService).completeUserHabit("user123", "habit456");
+        verify(appUserService).addXp("user123", HabitDifficulty.MEDIUM.getBaseXp());
+    }
+
+    @Test
+    void completeUserHabit_whenNotAuthenticated_redirectsToLogin() throws Exception {
+        mockMvc.perform(post("/api/my-habits/habit456/complete"))
+                .andExpect(status().is3xxRedirection());
+    }
 }

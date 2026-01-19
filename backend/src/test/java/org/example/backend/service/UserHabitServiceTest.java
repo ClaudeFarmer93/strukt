@@ -7,6 +7,7 @@ import org.example.backend.model.UserHabit;
 import org.example.backend.repository.UserHabitRepository;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,5 +128,134 @@ class UserHabitServiceTest {
         assertTrue(exception.getMessage().contains("not found"));
         verify(userHabitRepository).findByUserIdAndHabitId("user123", "habit123");
         verify(userHabitRepository, never()).delete(any());
+    }
+
+    @Test
+    void completeUserHabit_firstCompletion_setsStreakToOne() {
+        UserHabit userHabit = new UserHabit();
+        userHabit.setId("uh123");
+        userHabit.setUserId("user123");
+        userHabit.setHabitId("habit123");
+        userHabit.setDifficulty(HabitDifficulty.EASY);
+        userHabit.setFrequency(HabitFrequency.DAILY);
+        userHabit.setCurrentStreak(0);
+        userHabit.setLongestStreak(0);
+        userHabit.setTotalCompletions(0);
+        userHabit.setTotalXpEarned(0);
+        userHabit.setLastCompletedDate(null);
+
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
+        when(userHabitRepository.save(any(UserHabit.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserHabit result = userHabitService.completeUserHabit("user123", "habit123");
+
+        assertEquals(1, result.getCurrentStreak());
+        assertEquals(1, result.getLongestStreak());
+        assertEquals(1, result.getTotalCompletions());
+        assertEquals(LocalDate.now(), result.getLastCompletedDate());
+        verify(userHabitRepository).save(userHabit);
+    }
+
+    @Test
+    void completeUserHabit_consecutiveDay_incrementsStreak() {
+        UserHabit userHabit = new UserHabit();
+        userHabit.setId("uh123");
+        userHabit.setUserId("user123");
+        userHabit.setHabitId("habit123");
+        userHabit.setDifficulty(HabitDifficulty.MEDIUM);
+        userHabit.setFrequency(HabitFrequency.DAILY);
+        userHabit.setCurrentStreak(5);
+        userHabit.setLongestStreak(5);
+        userHabit.setTotalCompletions(5);
+        userHabit.setTotalXpEarned(100);
+        userHabit.setLastCompletedDate(LocalDate.now().minusDays(1));
+
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
+        when(userHabitRepository.save(any(UserHabit.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserHabit result = userHabitService.completeUserHabit("user123", "habit123");
+
+        assertEquals(6, result.getCurrentStreak());
+        assertEquals(6, result.getLongestStreak());
+        assertEquals(6, result.getTotalCompletions());
+    }
+
+    @Test
+    void completeUserHabit_missedDay_resetsStreak() {
+        UserHabit userHabit = new UserHabit();
+        userHabit.setId("uh123");
+        userHabit.setUserId("user123");
+        userHabit.setHabitId("habit123");
+        userHabit.setDifficulty(HabitDifficulty.EASY);
+        userHabit.setFrequency(HabitFrequency.DAILY);
+        userHabit.setCurrentStreak(5);
+        userHabit.setLongestStreak(10);
+        userHabit.setTotalCompletions(15);
+        userHabit.setTotalXpEarned(150);
+        userHabit.setLastCompletedDate(LocalDate.now().minusDays(3));
+
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
+        when(userHabitRepository.save(any(UserHabit.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserHabit result = userHabitService.completeUserHabit("user123", "habit123");
+
+        assertEquals(1, result.getCurrentStreak());
+        assertEquals(10, result.getLongestStreak());
+        assertEquals(16, result.getTotalCompletions());
+    }
+
+    @Test
+    void completeUserHabit_alreadyCompletedToday_throwsException() {
+        UserHabit userHabit = new UserHabit();
+        userHabit.setId("uh123");
+        userHabit.setUserId("user123");
+        userHabit.setHabitId("habit123");
+        userHabit.setFrequency(HabitFrequency.DAILY);
+        userHabit.setLastCompletedDate(LocalDate.now());
+
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userHabitService.completeUserHabit("user123", "habit123");
+        });
+
+        assertTrue(exception.getMessage().contains("already completed"));
+        verify(userHabitRepository, never()).save(any());
+    }
+
+    @Test
+    void completeUserHabit_weeklyHabit_consecutiveWeek_incrementsStreak() {
+        UserHabit userHabit = new UserHabit();
+        userHabit.setId("uh123");
+        userHabit.setUserId("user123");
+        userHabit.setHabitId("habit123");
+        userHabit.setDifficulty(HabitDifficulty.HARD);
+        userHabit.setFrequency(HabitFrequency.WEEKLY);
+        userHabit.setCurrentStreak(3);
+        userHabit.setLongestStreak(3);
+        userHabit.setTotalCompletions(3);
+        userHabit.setTotalXpEarned(150);
+        userHabit.setLastCompletedDate(LocalDate.now().minusWeeks(1));
+
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
+        when(userHabitRepository.save(any(UserHabit.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        UserHabit result = userHabitService.completeUserHabit("user123", "habit123");
+
+        assertEquals(4, result.getCurrentStreak());
+        assertEquals(4, result.getLongestStreak());
+        assertEquals(4, result.getTotalCompletions());
+    }
+
+    @Test
+    void completeUserHabit_whenNotFound_throwsException() {
+        when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userHabitService.completeUserHabit("user123", "habit123");
+        });
+
+        assertTrue(exception.getMessage().contains("not found"));
+        verify(userHabitRepository, never()).save(any());
     }
 }

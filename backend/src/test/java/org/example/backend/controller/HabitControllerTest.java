@@ -5,7 +5,9 @@ import org.example.backend.model.HabitDifficulty;
 import org.example.backend.model.HabitFrequency;
 import org.example.backend.repository.AppUserRepository;
 import org.example.backend.security.SecurityConfig;
+import org.example.backend.service.AppUserService;
 import org.example.backend.service.HabitService;
+import org.example.backend.service.UserHabitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -28,6 +30,12 @@ public class HabitControllerTest {
 
     @MockitoBean
     private HabitService habitService;
+
+    @MockitoBean
+    private UserHabitService userHabitService;
+
+    @MockitoBean
+    private AppUserService appUserService;
 
     @MockitoBean
     private AppUserRepository appUserRepository;
