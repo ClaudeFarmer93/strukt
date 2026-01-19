@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class AppUserService {
     private final AppUserRepository appUserRepository;
 
     public AppUser getOrCreateUser(OAuth2User oAuth2User) {
-        String githubId = oAuth2User.getAttribute("id").toString();
+        String githubId = Objects.requireNonNull(oAuth2User.getAttribute("id")).toString();
         String username = oAuth2User.getAttribute("login");
         String email = oAuth2User.getAttribute("email");
         String avatarUrl = oAuth2User.getAttribute("avatar_url");
