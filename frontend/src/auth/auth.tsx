@@ -1,7 +1,7 @@
 import {createContext, type ReactNode, useContext, useEffect, useState} from "react";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import type {User} from "../types/types";
+import {fetchCurrentUser} from "../api/authApi";
 
 interface AuthContextType  {
     user : User |undefined | null;
@@ -36,15 +36,9 @@ export function AuthProvider({children } : {children: ReactNode}) {
 
 
     function loadUser() {
-        axios.get<User>("http://localhost:8080/api/auth/me",{ withCredentials: true})
-            .then(response => {
-                console.log(response.data);
-                setUser(response.data)
-            })
-            .catch((err) => {
-                console.error((err));
-                setUser(null)
-            })
+        fetchCurrentUser()
+            .then(setUser)
+            .catch(() => setUser(null))
             .finally(() => setLoading(false));
     }
 
