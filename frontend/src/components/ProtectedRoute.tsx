@@ -1,4 +1,4 @@
-import {useAuth} from "../auth/auth.tsx";
+import {useAuth} from "../auth/useAuth";
 import {Navigate} from "react-router-dom";
 import type {JSX} from "react";
 

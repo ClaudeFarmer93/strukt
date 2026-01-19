@@ -1,5 +1,5 @@
 import {Box, AppBar, Button, Toolbar, Typography, Avatar} from "@mui/material";
-import {useAuth} from "../auth/auth.tsx";
+import {useAuth} from "../auth/useAuth";
 import {useNavigate} from "react-router-dom";
 
 export default function NavBar() {

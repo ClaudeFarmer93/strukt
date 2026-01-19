@@ -1,5 +1,5 @@
 import {Typography, Container, Box, Snackbar, Alert, Grid} from "@mui/material";
-import {useAuth} from "../auth/auth.tsx";
+import {useAuth} from "../auth/useAuth";
 import {useEffect, useState} from "react";
 import type {Habit, UserHabit} from "../types/types.ts";
 import UserStats from "../components/UserStats.tsx";
