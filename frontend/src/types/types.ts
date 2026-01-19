@@ -28,6 +28,7 @@ export interface UserHabit {
     habitName: string;
     difficulty: "EASY" | "MEDIUM" | "HARD";
     frequency: "DAILY" | "WEEKLY";
+    xp: number;
     active: boolean;
     currentStreak: number;
     longestStreak: number;

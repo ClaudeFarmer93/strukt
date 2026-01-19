@@ -127,7 +127,7 @@ export default function TodaysChallenges({habits, onComplete, loading}: TodaysCh
                                                  />
                                          )}
                                          <Typography variant="caption" color="textSecondary">
-                                         +{habit.difficulty === "EASY" ? 25 : habit.difficulty === "MEDIUM" ? 50 : 100} XP
+                                         +{habit.xp} XP
                                      </Typography>
                                      </Box>
                                  </Box>

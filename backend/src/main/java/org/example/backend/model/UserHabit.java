@@ -45,4 +45,9 @@ public class UserHabit {
         this.totalXpEarned = 0;
         this.active = true;
     }
+
+    public int getXp() {
+       return difficulty != null ? difficulty.getBaseXp() : 0;
+
+    }
 }
