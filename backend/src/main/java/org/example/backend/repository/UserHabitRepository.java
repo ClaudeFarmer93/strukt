@@ -1,6 +1,5 @@
 package org.example.backend.repository;
 
-import lombok.NonNull;
 import org.example.backend.model.UserHabit;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

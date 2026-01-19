@@ -1,9 +1,7 @@
 package org.example.backend.repository;
 
-import lombok.NonNull;
 import org.example.backend.model.Habit;
 import org.example.backend.model.HabitDifficulty;
-import org.example.backend.model.HabitFrequency;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

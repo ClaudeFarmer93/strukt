@@ -19,7 +19,7 @@ public class Habit {
     private HabitDifficulty difficulty;
     private HabitFrequency frequency;
 
-    public Habit(String name, String description, String categrory,
+    public Habit(String name, String description, String category,
                  HabitDifficulty difficulty, HabitFrequency frequency) {
         this.name = name;
         this.description = description;
