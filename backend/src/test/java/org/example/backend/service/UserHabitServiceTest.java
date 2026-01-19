@@ -92,9 +92,8 @@ class UserHabitServiceTest {
     void acceptUserHabit_whenAlreadyExists_throwsException() {
         when(userHabitRepository.existsByUserIdAndHabitId("user123", "habit123")).thenReturn(true);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userHabitService.acceptUserHabit("user123", "habit123");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userHabitService.acceptUserHabit("user123", "habit123"));
 
         assertTrue(exception.getMessage().contains("already"));
         verify(userHabitRepository).existsByUserIdAndHabitId("user123", "habit123");
@@ -121,9 +120,8 @@ class UserHabitServiceTest {
     void deleteUserHabit_whenNotFound_throwsException() {
         when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userHabitService.deleteUserHabit("user123", "habit123");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userHabitService.deleteUserHabit("user123", "habit123"));
 
         assertTrue(exception.getMessage().contains("not found"));
         verify(userHabitRepository).findByUserIdAndHabitId("user123", "habit123");
@@ -215,9 +213,8 @@ class UserHabitServiceTest {
 
         when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.of(userHabit));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userHabitService.completeUserHabit("user123", "habit123");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userHabitService.completeUserHabit("user123", "habit123"));
 
         assertTrue(exception.getMessage().contains("already completed"));
         verify(userHabitRepository, never()).save(any());
@@ -251,9 +248,8 @@ class UserHabitServiceTest {
     void completeUserHabit_whenNotFound_throwsException() {
         when(userHabitRepository.findByUserIdAndHabitId("user123", "habit123")).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userHabitService.completeUserHabit("user123", "habit123");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userHabitService.completeUserHabit("user123", "habit123"));
 
         assertTrue(exception.getMessage().contains("not found"));
         verify(userHabitRepository, never()).save(any());

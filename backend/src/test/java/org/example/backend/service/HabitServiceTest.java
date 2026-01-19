@@ -63,9 +63,8 @@ class HabitServiceTest {
     void getHabitById_whenNotFound_throwsException() {
         when(habitRepository.findById("nonexistent")).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            habitService.getHabitById("nonexistent");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> habitService.getHabitById("nonexistent"));
 
         assertTrue(exception.getMessage().contains("not found"));
         verify(habitRepository).findById("nonexistent");
@@ -116,9 +115,8 @@ class HabitServiceTest {
     void getRandomDailyHabit_whenNoneFound_throwsException() {
         when(habitRepository.findRandomDailyHabit()).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            habitService.getRandomDailyHabit();
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> habitService.getRandomDailyHabit());
 
         assertTrue(exception.getMessage().contains("daily"));
         verify(habitRepository).findRandomDailyHabit();
@@ -143,9 +141,8 @@ class HabitServiceTest {
     void getRandomWeeklyHabit_whenNoneFound_throwsException() {
         when(habitRepository.findRandomWeeklyHabit()).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            habitService.getRandomWeeklyHabit();
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> habitService.getRandomWeeklyHabit());
 
         assertTrue(exception.getMessage().contains("weekly"));
         verify(habitRepository).findRandomWeeklyHabit();
@@ -229,9 +226,8 @@ class HabitServiceTest {
         List<String> excludeIds = List.of("daily123");
         when(habitRepository.findRandomDailyHabitExcluding(excludeIds)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            habitService.getRandomDailyHabitExcluding(excludeIds);
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> habitService.getRandomDailyHabitExcluding(excludeIds));
 
         assertTrue(exception.getMessage().contains("daily"));
     }
@@ -241,9 +237,8 @@ class HabitServiceTest {
         List<String> excludeIds = List.of("weekly123");
         when(habitRepository.findRandomWeeklyHabitExcluding(excludeIds)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            habitService.getRandomWeeklyHabitExcluding(excludeIds);
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> habitService.getRandomWeeklyHabitExcluding(excludeIds));
 
         assertTrue(exception.getMessage().contains("weekly"));
     }

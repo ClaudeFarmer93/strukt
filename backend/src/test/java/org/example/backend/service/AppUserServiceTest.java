@@ -36,9 +36,8 @@ class AppUserServiceTest {
     void getUserById_whenNotFound_throwsException() {
         when(appUserRepository.findById("nonexistent")).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            appUserService.getUserById("nonexistent");
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> appUserService.getUserById("nonexistent"));
 
         assertTrue(exception.getMessage().contains("not found"));
     }
