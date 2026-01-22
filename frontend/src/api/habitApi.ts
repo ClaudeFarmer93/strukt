@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {Habit, UserHabit} from "../types/types.ts";
+import type {Habit} from "../types/types.ts";
 
 
 const api = axios.create({
@@ -16,17 +16,5 @@ export const getRandomWeeklyHabit = () =>
 export const getAllHabits =() =>
     api.get<Habit[]>("/habits");
 
-
-export const getMyHabits =() =>
-    api.get<UserHabit[]>("/my-habits");
-
-export const acceptUserHabit=(habitId: string) =>
-    api.post<UserHabit>(`/my-habits/${habitId}`);
-
-export const deleteUserHabit = (habitId: string) =>
-    api.delete<void>(`/my-habits/${habitId}`);
-
-export const completeUserHabit = (habitId: string) =>
-    api.post<UserHabit>(`/my-habits/${habitId}/complete`);
 
 
