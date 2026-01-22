@@ -12,7 +12,7 @@ import TodaysChallenges from "../components/TodaysChallenges.tsx";
 import {acceptUserHabit, completeUserHabit, deleteUserHabit, getMyHabits} from "../api/userhabitApi.ts";
 
 export default function DashboardPage() {
-const {user} = useAuth();
+const {user, refreshUser} = useAuth();
 
 const [dailyHabit, setDailyHabit] = useState<Habit |null>(null);
 const [weeklyHabit, setWeeklyHabit] = useState<Habit| null>(null);
@@ -80,6 +80,7 @@ const handleComplete = async (habitId: string) => {
     try {
         await completeUserHabit(habitId);
         setSnackbar({open: true, message: "Habit completed! XP earned", severity: "success"});
+        refreshUser();
         await fetchMyHabits();
     } catch (err) {
         setSnackbar({open: true, message: "Failed to complete this habit", severity: "error"});
