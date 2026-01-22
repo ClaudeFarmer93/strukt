@@ -82,7 +82,12 @@ export default function TodaysChallenges({habits, onComplete, loading, onDelete}
                         sx={{height: 6, borderRadius: 3, mb: 1}}/>
                     </Box>
                         )}
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
+                        <Box sx={{ display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                            maxHeight: "calc(100vh - 400px)",
+                            overflowY: "auto"
+                        }}>
                             {habits.map((habit) => {
                             const completed = isCompleted(habit);
                                return (
