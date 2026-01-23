@@ -1,12 +1,15 @@
-import {Card, CardContent, Typography, Box, Chip, IconButton, LinearProgress} from "@mui/material";
+import {Card, CardContent, Typography, Box, Chip, IconButton, LinearProgress, Stack} from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import type {UserHabit} from "../types/types.ts";
 
 interface TodaysChallengesProps {
     habits : UserHabit[];
     onComplete: (habitId: string) => void;
     loading: boolean;
+    onDelete: (habitId: string) => void;
 }
 
 const difficultyColor ={
@@ -15,7 +18,7 @@ const difficultyColor ={
     HARD: "error"
 } as const;
 
-export default function TodaysChallenges({habits, onComplete, loading}: TodaysChallengesProps) {
+export default function TodaysChallenges({habits, onComplete, loading, onDelete}: TodaysChallengesProps) {
 
     const isCompletedToday = (habit: UserHabit): boolean => {
         if(!habit.lastCompletedDate) return false;
@@ -79,7 +82,12 @@ export default function TodaysChallenges({habits, onComplete, loading}: TodaysCh
                         sx={{height: 6, borderRadius: 3, mb: 1}}/>
                     </Box>
                         )}
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
+                        <Box sx={{ display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                            maxHeight: "calc(100vh - 400px)",
+                            overflowY: "auto"
+                        }}>
                             {habits.map((habit) => {
                             const completed = isCompleted(habit);
                                return (
@@ -100,12 +108,19 @@ export default function TodaysChallenges({habits, onComplete, loading}: TodaysCh
                                      <Box sx={{
                                          display: "flex", alignItems: "center", gap:1
                                      }}>
+                                         <Stack direction={"column"} spacing={0.5}>
+
                                          <IconButton size={"small"} onClick={() => !completed && onComplete(habit.habitId)}
                                                      disabled={completed}
-                                                     color={completed ? "success" : "default"}
+                                                     sx={{color: completed ? "success.main" : "text.secondary", "&:hover": {color: "success.main"}}}
                                                      >
                                              {completed ? <CheckCircleIcon /> : <CheckCircleOutlineIcon />}
                                          </IconButton>
+                                         <IconButton size={"small"}  sx={{color:"text.secondary", "&:hover": {color: "error.main"} }}
+                                                     onClick={() =>onDelete(habit.habitId)}>
+                                             <DeleteIcon />
+                                         </IconButton>
+                                         </Stack>
                                      <Typography variant="body2" sx={{
                                          textDecoration: completed ? "line-through" : "none",
                                      }}

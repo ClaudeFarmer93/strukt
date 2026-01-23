@@ -5,16 +5,14 @@ import type {Habit, UserHabit} from "../types/types.ts";
 import UserStats from "../components/UserStats.tsx";
 import HabitCard from "../components/HabitCard.tsx";
 import {
-    acceptUserHabit,
-    completeUserHabit,
-    getMyHabits,
     getRandomDailyHabit,
     getRandomWeeklyHabit
 } from "../api/habitApi.ts";
 import TodaysChallenges from "../components/TodaysChallenges.tsx";
+import {acceptUserHabit, completeUserHabit, deleteUserHabit, getMyHabits} from "../api/userhabitApi.ts";
 
 export default function DashboardPage() {
-const {user} = useAuth();
+const {user, refreshUser} = useAuth();
 
 const [dailyHabit, setDailyHabit] = useState<Habit |null>(null);
 const [weeklyHabit, setWeeklyHabit] = useState<Habit| null>(null);
@@ -82,12 +80,24 @@ const handleComplete = async (habitId: string) => {
     try {
         await completeUserHabit(habitId);
         setSnackbar({open: true, message: "Habit completed! XP earned", severity: "success"});
+        refreshUser();
         await fetchMyHabits();
     } catch (err) {
         setSnackbar({open: true, message: "Failed to complete this habit", severity: "error"});
         console.error("Failed to complete", err);
     }
 };
+
+const handleDelete = async (habitId:string) => {
+    try {
+        await deleteUserHabit(habitId);
+        setSnackbar({open: true, message: "Habit deleted", severity : "success"});
+        await fetchMyHabits();
+    } catch (err) {
+        setSnackbar({open: true, message: "Failed to delete habit", severity: "error"})
+        console.error("Failed to complete", err);
+    }
+}
 
     useEffect(() => {
         fetchDailyHabit();
@@ -125,7 +135,8 @@ if(!user) return null;
             <Grid size={{ xs: 12, md: 4}}>
                 <TodaysChallenges habits={myHabits}
                                   onComplete={handleComplete}
-                                  loading={loadingMyHabits}/>
+                                  loading={loadingMyHabits}
+                onDelete={handleDelete}/>
 
             </Grid>
             </Grid>

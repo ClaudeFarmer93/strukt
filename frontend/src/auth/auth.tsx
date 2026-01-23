@@ -6,8 +6,9 @@ import {AuthContext} from "./AuthContext";
 
 export function AuthProvider({children}: {children: ReactNode}) {
 
-    const [user, setUser] = useState<User | undefined |null>(null);
+    const [user, setUser] = useState<User |null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+
     const navigate = useNavigate();
 
     function login()  {
@@ -33,6 +34,13 @@ export function AuthProvider({children}: {children: ReactNode}) {
             .catch(() => setUser(null))
             .finally(() => setLoading(false));
     }
+     function refreshUser() {
+      fetchCurrentUser().then((u) => setUser(u))
+          .catch(() => setUser(null))
+
+
+
+    }
 
     useEffect(() => {
         if(user) {
@@ -45,7 +53,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{user, login, logout, loading}}>
+        <AuthContext.Provider value={{user,refreshUser, login, logout, loading}}>
             {children}
         </AuthContext.Provider>
     )
