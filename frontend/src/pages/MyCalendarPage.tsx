@@ -71,9 +71,7 @@ export default function CalendarPage() {
     const fetchCompletions = async (monday: Date) => {
         setLoading(true);
         try {
-            console.log("Fetching completions for monday:", formatDate(monday));
             const res = await getWeekCompletions(formatDate(monday));
-            console.log("API returned completions:", res.data);
             setCompletions(res.data);
         } catch {
             setCompletions([]);
@@ -100,11 +98,9 @@ export default function CalendarPage() {
     };
 
     const weekDates = getWeekDates(currentMonday);
-    console.log("Week dates:", weekDates.map(d => formatDate(d)));
 
     const getCompletionsForDay = (date: Date): HabitCompletion[] => {
         const dateStr = formatDate(date);
-        console.log("Looking for date:", dateStr, "in completions:", completions.map(c => c.completionDate));
         return completions.filter(c => c.completionDate === dateStr);
     };
 
