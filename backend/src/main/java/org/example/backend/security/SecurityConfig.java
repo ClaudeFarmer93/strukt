@@ -31,11 +31,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers("/api/my-habits").authenticated()
                         .requestMatchers("/api/my-habits/**").authenticated()
-
+                        .requestMatchers("/api/completions/**").authenticated()
                         //Everything else for now
                         .anyRequest().authenticated())
                 .oauth2Login(o -> o
-                        .defaultSuccessUrl("http://localhost:5173/"))
+                        .defaultSuccessUrl("http://localhost:5173/dashboard"))
                 .logout(logout -> logout
                         .logoutSuccessUrl("http://localhost:5173/"));
         return http.build();
