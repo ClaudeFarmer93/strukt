@@ -1,18 +1,17 @@
 import {type ReactNode, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+
 import type {User} from "../types/types";
 import {fetchCurrentUser} from "../api/authApi";
 import {AuthContext} from "./AuthContext";
 
-export function AuthProvider({children}: {children: ReactNode}) {
+export function AuthProvider({children}: { children: ReactNode }) {
 
-    const [user, setUser] = useState<User |null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const navigate = useNavigate();
 
-    function login()  {
-        const host : string = window.location.host === "localhost:5173" ?
+    function login() {
+        const host: string = window.location.host === "localhost:5173" ?
             "http://localhost:8080" :
             window.location.origin;
         window.open(host + "/oauth2/authorization/github", "_self")
@@ -21,7 +20,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
     function logout() {
         setLoading(true);
         setUser(null);
-        const host : string = window.location.host === "localhost:5173" ?
+        const host: string = window.location.host === "localhost:5173" ?
             "http://localhost:8080" :
             window.location.origin;
         window.open(host + "/logout", "_self");
@@ -34,26 +33,21 @@ export function AuthProvider({children}: {children: ReactNode}) {
             .catch(() => setUser(null))
             .finally(() => setLoading(false));
     }
-     function refreshUser() {
-      fetchCurrentUser().then((u) => setUser(u))
-          .catch(() => setUser(null))
 
+    function refreshUser() {
+        fetchCurrentUser().then((u) => setUser(u))
+            .catch(() => setUser(null))
 
 
     }
 
-    useEffect(() => {
-        if(user) {
-            navigate("/dashboard")
-        }
-    }, [user, navigate]);
 
     useEffect(() => {
         loadUser();
     }, []);
 
     return (
-        <AuthContext.Provider value={{user,refreshUser, login, logout, loading}}>
+        <AuthContext.Provider value={{user, refreshUser, login, logout, loading}}>
             {children}
         </AuthContext.Provider>
     )
