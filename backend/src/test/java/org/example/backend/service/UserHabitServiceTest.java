@@ -1,7 +1,6 @@
 package org.example.backend.service;
 
 import org.example.backend.model.Habit;
-import org.example.backend.model.HabitCompletion;
 import org.example.backend.model.HabitDifficulty;
 import org.example.backend.model.HabitFrequency;
 import org.example.backend.model.UserHabit;
