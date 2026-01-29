@@ -15,8 +15,19 @@ import {useAuth} from "../auth/useAuth.ts";
 import {useEffect, useState} from "react";
 import type {HabitCompletion} from "../types/types.ts";
 import {getWeekCompletions} from "../api/userhabitApi.ts";
+import {
+    startOfWeek,
+    format,
+    eachDayOfInterval,
+    addDays,
+    subWeeks,
+    addWeeks,
+    isSameDay,
+    isAfter,
+    isToday as dateFnsIsToday
+} from "date-fns";
 
-const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+const DAYS :string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 const difficultyColor = {
     EASY: "success",
@@ -24,43 +35,23 @@ const difficultyColor = {
     HARD: "error"
 } as const;
 
-function getMonday(date: Date): Date {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    d.setDate(diff);
-    d.setHours(0, 0, 0, 0);
-    return d;
-}
+const getMonday = (date: Date): Date =>
+    startOfWeek(date, {weekStartsOn: 1});
 
-function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-}
+const formatDate = (date: Date): string =>
+    format(date, "yyyy-MM-dd");
 
-function formatDateDisplay(date: Date): string {
-    return date.toLocaleDateString("en-US", {month: "short", day: "numeric"});
-}
+const formatDateDisplay = (date: Date): string =>
+    format(date, "MMM d");
 
-function getWeekDates(monday: Date): Date[] {
-    return Array.from({length: 7}, (_, i) => {
-        const d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        return d;
-    });
-}
+const getWeekDates = (monday: Date): Date[] =>
+    eachDayOfInterval({start: monday, end: addDays(monday, 6)});
 
-function isCurrentWeek(monday: Date): boolean {
-    const currentMonday = getMonday(new Date());
-    return formatDate(monday) === formatDate(currentMonday);
-}
+const isCurrentWeek = (monday: Date): boolean =>
+    isSameDay(monday, getMonday(new Date()));
 
-function isFutureWeek(monday: Date): boolean {
-    const currentMonday = getMonday(new Date());
-    return monday > currentMonday;
-}
+const isFutureWeek = (monday: Date): boolean =>
+    isAfter(monday, getMonday(new Date()));
 
 export default function CalendarPage() {
     const {user} = useAuth();
@@ -85,16 +76,12 @@ export default function CalendarPage() {
     }, [currentMonday]);
 
     const goToPreviousWeek = () => {
-        const newMonday = new Date(currentMonday);
-        newMonday.setDate(newMonday.getDate() - 7);
-        setCurrentMonday(newMonday);
+        setCurrentMonday(subWeeks(currentMonday, 1));
     };
 
     const goToNextWeek = () => {
         if (isFutureWeek(currentMonday)) return;
-        const newMonday = new Date(currentMonday);
-        newMonday.setDate(newMonday.getDate() + 7);
-        setCurrentMonday(newMonday);
+        setCurrentMonday(addWeeks(currentMonday, 1));
     };
 
     const weekDates = getWeekDates(currentMonday);
@@ -104,9 +91,7 @@ export default function CalendarPage() {
         return completions.filter(c => c.completionDate === dateStr);
     };
 
-    const isToday = (date: Date): boolean => {
-        return formatDate(date) === formatDate(new Date());
-    };
+    const isToday = (date: Date): boolean => dateFnsIsToday(date);
 
     if (!user) return null;
 
@@ -163,7 +148,7 @@ export default function CalendarPage() {
                                 sx={{
                                     p: 1.5,
                                     minHeight: 180,
-                                    bgcolor: today ? "action.selected" : "background.paper",
+                                    bgcolor: "background.paper",
                                     border: today ? "2px solid" : "1px solid",
                                     borderColor: today ? "primary.main" : "divider",
                                     borderRadius: 2,
