@@ -211,17 +211,7 @@ export default function CalendarPage() {
                                                         >
                                                             {completion.habitName}
                                                         </Typography>
-                                                        <Box sx={{display: "flex", gap: 0.5, mt: 0.25, flexWrap: "wrap"}}>
-                                                            <Chip
-                                                                label={completion.difficulty}
-                                                                color={difficultyColor[completion.difficulty]}
-                                                                size="small"
-                                                                sx={{height: 14, fontSize: "0.6rem"}}
-                                                            />
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                +{completion.xpEarned}XP
-                                                            </Typography>
-                                                        </Box>
+
                                                     </Box>
                                                 </Box>
                                             ))}
