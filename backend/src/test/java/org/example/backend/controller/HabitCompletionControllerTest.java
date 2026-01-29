@@ -120,9 +120,9 @@ public class HabitCompletionControllerTest {
     }
 
     @Test
-    void getWeekCompletions_whenNotAuthenticated_redirectsToLogin() throws Exception {
+    void getWeekCompletions_whenNotAuthenticated_returnsUnauthorized() throws Exception {
         mockMvc.perform(get("/api/completions/week"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
