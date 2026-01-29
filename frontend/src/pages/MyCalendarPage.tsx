@@ -29,12 +29,6 @@ import {
 
 const DAYS :string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-const difficultyColor = {
-    EASY: "success",
-    MEDIUM: "warning",
-    HARD: "error"
-} as const;
-
 const getMonday = (date: Date): Date =>
     startOfWeek(date, {weekStartsOn: 1});
 
