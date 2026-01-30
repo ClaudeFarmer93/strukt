@@ -6,6 +6,8 @@ import org.example.backend.model.HabitFrequency;
 import org.example.backend.model.UserHabit;
 import org.example.backend.repository.HabitCompletionRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -103,31 +105,18 @@ class HabitCompletionServiceTest {
         verify(habitCompletionRepository).findByUserIdAndWeek("user123", "2026-01-26", "2026-02-01");
     }
 
-    @Test
-    void getCompletionsForWeek_calculatesCorrectMondayForWednesday() {
+    @ParameterizedTest(name = "date {0} should calculate week as {1} to {2}")
+    @CsvSource({
+            "2026-01-28, 2026-01-26, 2026-02-01",
+            "2026-01-26, 2026-01-26, 2026-02-01",
+            "2026-02-01, 2026-01-26, 2026-02-01"
+    })
+    void getCompletionsForWeek_calculatesCorrectWeekBounds(String inputDate, String expectedStart, String expectedEnd) {
         when(habitCompletionRepository.findByUserIdAndWeek(any(), any(), any())).thenReturn(List.of());
 
-        habitCompletionService.getCompletionsForWeek("user123", LocalDate.of(2026, 1, 28));
+        habitCompletionService.getCompletionsForWeek("user123", LocalDate.parse(inputDate));
 
-        verify(habitCompletionRepository).findByUserIdAndWeek("user123", "2026-01-26", "2026-02-01");
-    }
-
-    @Test
-    void getCompletionsForWeek_calculatesCorrectMondayForMonday() {
-        when(habitCompletionRepository.findByUserIdAndWeek(any(), any(), any())).thenReturn(List.of());
-
-        habitCompletionService.getCompletionsForWeek("user123", LocalDate.of(2026, 1, 26));
-
-        verify(habitCompletionRepository).findByUserIdAndWeek("user123", "2026-01-26", "2026-02-01");
-    }
-
-    @Test
-    void getCompletionsForWeek_calculatesCorrectMondayForSunday() {
-        when(habitCompletionRepository.findByUserIdAndWeek(any(), any(), any())).thenReturn(List.of());
-
-        habitCompletionService.getCompletionsForWeek("user123", LocalDate.of(2026, 2, 1));
-
-        verify(habitCompletionRepository).findByUserIdAndWeek("user123", "2026-01-26", "2026-02-01");
+        verify(habitCompletionRepository).findByUserIdAndWeek("user123", expectedStart, expectedEnd);
     }
 
     @Test

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HabitController.class)
 @Import(SecurityConfig.class)
-public class HabitControllerTest {
+class HabitControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
