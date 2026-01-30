@@ -19,7 +19,8 @@ class UserHabitServiceTest {
 
     private final UserHabitRepository userHabitRepository = mock(UserHabitRepository.class);
     private final HabitService habitService = mock(HabitService.class);
-    private final UserHabitService userHabitService = new UserHabitService(userHabitRepository, habitService);
+    private final HabitCompletionService habitCompletionService = mock(HabitCompletionService.class);
+    private final UserHabitService userHabitService = new UserHabitService(userHabitRepository, habitService, habitCompletionService);
 
     @Test
     void getUserHabits_returnsActiveHabits() {

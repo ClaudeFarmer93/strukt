@@ -4,6 +4,7 @@ import DashboardPage from "./pages/DashboardPage.tsx";
 import {AuthProvider} from "./auth/auth.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Layout from "./components/Layout.tsx";
+import CalendarPage from "./pages/MyCalendarPage.tsx";
 
 function App() {
 
@@ -17,6 +18,9 @@ function App() {
                 <Route path={"/dashboard"}
                        element={
                     <ProtectedRoute><DashboardPage/></ProtectedRoute>
+                }/>
+                <Route path={"/calendar"} element={
+                    <ProtectedRoute><CalendarPage/></ProtectedRoute>
                 }/>
             </Route>
 

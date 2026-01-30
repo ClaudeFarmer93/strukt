@@ -20,6 +20,8 @@ public class UserHabitService {
 
     private final UserHabitRepository userHabitRepository;
     private final HabitService habitService;
+    private final HabitCompletionService habitCompletionService;
+
 
     public List<UserHabit> getUserHabits(String userId) {
         return userHabitRepository.findByUserIdAndActiveTrue(userId);
@@ -63,6 +65,8 @@ public class UserHabitService {
         userHabit.setLastCompletedDate(today);
         userHabit.setTotalCompletions(userHabit.getTotalCompletions() + 1);
         userHabit.setTotalXpEarned(userHabit.getTotalXpEarned() + userHabit.getDifficulty().getBaseXp());
+
+        habitCompletionService.recordCompletion(userId, userHabit);
 
         return userHabitRepository.save(userHabit);
     }

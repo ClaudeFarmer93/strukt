@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {UserHabit} from "../types/types.ts";
+import type {UserHabit, HabitCompletion} from "../types/types.ts";
 
 
 const api = axios.create({
@@ -18,3 +18,8 @@ export const deleteUserHabit = (habitId: string) =>
 
 export const completeUserHabit = (habitId: string) =>
     api.post<UserHabit>(`/my-habits/${habitId}/complete`);
+
+export const getWeekCompletions = (date? : string) =>
+    api.get<HabitCompletion[]>("/completions/week", {
+        params: date ? { date } : {}
+    });

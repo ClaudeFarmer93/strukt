@@ -36,3 +36,15 @@ export interface UserHabit {
     totalCompletions: number;
     totalXpEarned: number;
 }
+
+export interface HabitCompletion {
+    id: string;
+    userId: string;
+    userHabitId: string;
+    habitId: string;
+    habitName: string;
+    difficulty: "EASY" | "MEDIUM" | "HARD";
+    frequency: "DAILY" | "WEEKLY";
+    completionDate: string;
+    xpEarned: number;
+}
