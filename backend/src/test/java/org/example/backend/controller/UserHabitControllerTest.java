@@ -87,9 +87,9 @@ class UserHabitControllerTest {
     }
 
     @Test
-    void getMyHabits_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void getMyHabits_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(get("/api/my-habits"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -124,9 +124,9 @@ class UserHabitControllerTest {
     }
 
     @Test
-    void acceptUserHabit_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void acceptUserHabit_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(post("/api/my-habits/habit456"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -143,9 +143,9 @@ class UserHabitControllerTest {
     }
 
     @Test
-    void deleteUserHabit_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void deleteUserHabit_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(delete("/api/my-habits/habit456"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -181,8 +181,8 @@ class UserHabitControllerTest {
     }
 
     @Test
-    void completeUserHabit_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void completeUserHabit_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(post("/api/my-habits/habit456/complete"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection());
     }
 }

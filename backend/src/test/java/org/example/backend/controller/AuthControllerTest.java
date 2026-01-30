@@ -65,8 +65,8 @@ class AuthControllerTest {
     }
 
     @Test
-    void getMe_whenNotAuthenticated_returnsUnauthorized() throws Exception {
+    void getMe_whenNotAuthenticated_redirectsToLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/me"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
     }
 }
