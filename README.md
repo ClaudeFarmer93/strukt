@@ -16,9 +16,9 @@ Strukt is a full-stack web application designed to make habit building engaging 
 
 ### Gamification System
 - **Experience Points (XP)**: Earn XP based on habit difficulty
-  - Easy: 25 XP
-  - Medium: 50 XP
-  - Hard: 100 XP
+    - Easy: 25 XP
+    - Medium: 50 XP
+    - Hard: 100 XP
 - **Level Progression**: Accumulate XP to level up (each level requires `100 × level` XP)
 - **Streak Tracking**: Maintain consecutive completion streaks for individual habits and overall activity
 - **User Statistics**: View your total XP, current level, and streak records
